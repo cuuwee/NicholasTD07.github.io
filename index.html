@@ -106,9 +106,62 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="noa2cfgrapy07j3v" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="d5w91m9fdro5ak1l" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/04/25/fixing-hexos-deployer/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-fix-hexos-deployer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/04/25/fix-hexos-deployer/" class="article-date">
+  <time datetime="2014-04-25T05:48:30.000Z" itemprop="datePublished">Apr 25 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/04/25/fix-hexos-deployer/">Fixing Hexo&#39;s Deployer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Missing_Deployers_in_Heroku">Missing Deployers in Heroku</h2>
+<p>Some Deployers were not registered when they should be.</p>
+<h2 id="TL;DR">TL;DR</h2>
+<p>In <code>hexo/lib/plugins/deployer/heroku/index.js</code> and <code>.../deployer/openshift.js</code> there’s a line like this:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
+</pre></td></tr></table></figure>
+
+<p>And, that <code>../..</code> is one level deeper than it needs to be.</p>
+<p>Case closed. :D</p>
+
+        
+          <p class="article-more-link">
+            <a href="/2014/04/25/fix-hexos-deployer/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://nickTD.com/2014/04/25/fix-hexos-deployer/" data-id="dmctao5jt2fvtfq5" class="article-share-link">Share</a>
+      
+        <a href="http://nickTD.com/2014/04/25/fix-hexos-deployer/#disqus_thread" class="article-comment-link">Comments</a>
       
       
     </footer>
@@ -182,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/04/21/2014-04-21-hello-world/" data-id="n6b3smzel5vxdflp" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/04/21/2014-04-21-hello-world/" data-id="mgkz0shf6pyxiwe0" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/04/21/2014-04-21-hello-world/#disqus_thread" class="article-comment-link">Comments</a>
       
