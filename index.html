@@ -89,124 +89,20 @@
       
         <h2 id="Missing_Deployers_in_Heroku">Missing Deployers in Heroku</h2>
 <p>Some Deployers were not registered when they should be.</p>
-<p>When I tried to deploy my blog to Heroku, this happened.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td><td class="code"><pre>[info] <span class="operator"><span class="keyword">Start</span> deploying: heroku
-[error] TypeError: Property <span class="string">'heroku'</span> <span class="keyword">of</span> object #&lt;Object&gt; <span class="keyword">is</span> <span class="keyword">not</span> a function
-TypeError: Property <span class="string">'heroku'</span> <span class="keyword">of</span> object #&lt;Object&gt; <span class="keyword">is</span> <span class="keyword">not</span> a function
-    <span class="keyword">at</span> /usr/<span class="keyword">local</span>/lib/node_modules/hexo/lib/plugins/console/deploy.js:<span class="number">74</span>:<span class="number">21</span>
-    <span class="keyword">at</span> iterate (/usr/<span class="keyword">local</span>/lib/node_modules/hexo/node_modules/async/lib/async.js:<span class="number">142</span>:<span class="number">13</span>)
-    <span class="keyword">at</span> Object.async.eachSeries (/usr/<span class="keyword">local</span>/lib/node_modules/hexo/node_modules/async/lib/async.js:<span class="number">158</span>:<span class="number">9</span>)
-    <span class="keyword">at</span> /usr/<span class="keyword">local</span>/lib/node_modules/hexo/lib/plugins/console/deploy.js:<span class="number">69</span>:<span class="number">11</span>
-    <span class="keyword">at</span> /usr/<span class="keyword">local</span>/lib/node_modules/hexo/lib/plugins/console/deploy.js:<span class="number">35</span>:<span class="number">27</span>
-    <span class="keyword">at</span> Object.cb [<span class="keyword">as</span> oncomplete] (fs.js:<span class="number">168</span>:<span class="number">19</span>)</span>
-</pre></td></tr></table></figure>
-
-<p>So I looked into <code>plugins/console/deploy.js</code>, and I added <code>log.i(&#39;deployers: &#39;, deployer);</code> after this block of code.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre>module.exports = <span class="function"><span class="keyword">function</span><span class="params">(args, callback)</span>{</span>
-  <span class="keyword">var</span> config = hexo.config.deploy,
-    log = hexo.log,
-    extend = hexo.extend,
-    deployer = extend.deployer.list();
-</pre></td></tr></table></figure>
-
-<p>Then this came up. <code>[info] deployers:  { git: [Function], github: [Function] }</code><br>That’s when I found that Heroku Deployer was not registered with two other deployers not registered, e.g. <em>openshift, rysnc</em>.</p>
-<h2 id="How_Hexo_Loads_All_Deployers">How Hexo Loads All Deployers</h2>
-<p>As you can see from the log above, somewhere on your disk there’s a folder called <code>node_modules</code> where <code>hexo</code> lies.</p>
-<p>When you type <code>hexo deploy</code>, here’s what happens:</p>
-<h3 id="TL;DR">TL;DR</h3>
-<ol>
-<li><code>hexo/lib/init.js</code> loads everything in <code>hexo/lib/loaders/</code></li>
-<li><code>hexo/lib/loaders/extend.js</code> loads all <a href="http://hexo.io/api/classes/Extend.html" target="_blank">Extend/Plugins</a> including our <strong>Deployer</strong> by doing <code>require(&#39;../plugins/&#39; + item);</code>.</li>
-<li><code>hexo/lib/plugins/deployer/index.js</code> registers every deployer by <code>requiring</code> them. (Well, you know, the <code>require</code> in JS).</li>
-<li>That’s it.</li>
-</ol>
-<h3 id="Detailed_Version">Detailed Version</h3>
-<ol>
-<li><code>hexo/bin/hexo</code> calls <code>hexo/lib/init.js</code>.</li>
-<li><code>init.js</code> loads other important things for Hexo, like <code>config</code>, <code>extend</code>, etc. with this piece of code:</li>
-</ol>
-<figure class="highlight nodejs"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-</pre></td><td class="code"><pre>async.eachSeries([
-  <span class="string">'logger'</span>,
-  <span class="string">'extend'</span>,
-  <span class="string">'config'</span>,
-  <span class="string">'update'</span>,
-  <span class="string">'database'</span>,
-  <span class="string">'plugins'</span>,
-  <span class="string">'scripts'</span>
-], <span class="keyword">function</span>(name, <span class="keyword">next</span>){
-  <span class="keyword">require</span>(<span class="string">'./loaders/'</span> + name)(<span class="keyword">next</span>); // THIS!
-}, // <span class="keyword">...</span> more code
-</pre></td></tr></table></figure>
-
-<ol>
-<li><code>hexo/lib/loaders/extend.js</code> loads <em>Deploy Plugin</em> with this line:</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre><span class="keyword">try</span> {
-  <span class="built_in">require</span>(<span class="string">'../plugins/'</span> + item);
-  } <span class="keyword">catch</span> (e){
-  hexo.log.e(<span class="string">"Failed loading: "</span> + item + <span class="string">" for: "</span> + e); <span class="regexp">//</span> THIS <span class="keyword">is</span> added <span class="keyword">by</span> me.
-}
-</pre></td></tr></table></figure>
-
-<p>In our case item is the deployer.</p>
-<ol>
-<li>At last <code>hexo/lib/plugins/deployer/index.js</code> loads all deployers.</li>
-</ol>
-<h2 id="What_Went_Wrong">What Went Wrong</h2>
-<p>In Deployers’ code of <em>Heroku</em> and <em>OpenShift</em> there is a line like this :</p>
+<h2 id="TL;DR">TL;DR</h2>
+<p>In <code>hexo/lib/plugins/deployer/heroku/index.js</code> and <code>.../deployer/openshift.js</code> there’s a line like this:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
 </pre></td></tr></table></figure>
 
-<p>Only difference is the different locations of <code>deployer/heroku/index.js</code> and <code>deployer/openshift.js</code> causing the <code>..\..</code> part of <em>Heroku</em> is one level deeper than the <em>OpenShift</em> one.</p>
-<h3 id="What_Really_Went_Wrong">What Really Went Wrong</h3>
-<p>Yes! The <code>..\..</code> part. It is one level deeper than it actually need for both <em>Heroku</em> and <em>OpenShift</em>.</p>
-<p>And maybe in that <code>catch</code> statement where I added a line of logging should have something similar there, letting people know what and where is the bug.</p>
-<h3 id="What’s_More">What’s More</h3>
-<p>Though <a href="http://hexo.io/docs/deployment.html#Batch_Deploy" target="_blank">here</a> it says it can, currently Hexo seems couldn’t handle <strong>Batch Deployment</strong> configuration which looks like this:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-</pre></td><td class="code"><pre>deploy:
-- type: github
-  repo: <span class="keyword">...</span>
-- type: heroku
-  repo: <span class="keyword">...</span>
-</pre></td></tr></table></figure>
+<p>And, that <code>../..</code> is one level deeper than it needs to be.</p>
+<p>Case closed. :D</p>
 
-
+        
+          <p class="article-more-link">
+            <a href="/2014/04/25/fix-hexos-deployer/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
