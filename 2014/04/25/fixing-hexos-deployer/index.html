@@ -138,17 +138,17 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 </pre></td></tr></table></figure>
 
 <p>Then this came up. <code>[info] deployers:  { git: [Function], github: [Function] }</code><br>That’s when I found that Heroku Deployer was not registered with two other deployers not registered, e.g. <em>openshift, rysnc</em>.</p>
-<h2 id="How_Hexo_Loads_All_Deployers">How Hexo Loads All Deployers</h2>
+<h3 id="How_Hexo_Loads_All_Deployers">How Hexo Loads All Deployers</h3>
 <p>As you can see from the log above, somewhere on your disk there’s a folder called <code>node_modules</code> where <code>hexo</code> lies.</p>
 <p>When you type <code>hexo deploy</code>, here’s what happens:</p>
-<h3 id="TL;DR-1">TL;DR</h3>
+<h4 id="TL;DR-1">TL;DR</h4>
 <ol>
 <li><code>hexo/lib/init.js</code> loads everything in <code>hexo/lib/loaders/</code></li>
 <li><code>hexo/lib/loaders/extend.js</code> loads all <a href="http://hexo.io/api/classes/Extend.html" target="_blank">Extend/Plugins</a> including our <strong>Deployer</strong> by doing <code>require(&#39;../plugins/&#39; + item);</code>.</li>
 <li><code>hexo/lib/plugins/deployer/index.js</code> registers every deployer by <code>requiring</code> them. (Well, you know, the <code>require</code> in JS).</li>
 <li>That’s it.</li>
 </ol>
-<h3 id="Detailed_Version-1">Detailed Version</h3>
+<h4 id="Detailed_Version-1">Detailed Version</h4>
 <ol>
 <li><code>hexo/bin/hexo</code> calls <code>hexo/lib/init.js</code>.</li>
 <li><code>init.js</code> loads other important things for Hexo, like <code>config</code>, <code>extend</code>, etc. with this piece of code:</li>
@@ -196,14 +196,14 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 <ol>
 <li>At last <code>hexo/lib/plugins/deployer/index.js</code> loads all deployers.</li>
 </ol>
-<h2 id="What_Went_Wrong">What Went Wrong</h2>
+<h3 id="What_Went_Wrong">What Went Wrong</h3>
 <p>In Deployers’ code of <em>Heroku</em> and <em>OpenShift</em> there is a line like this :</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
 </pre></td></tr></table></figure>
 
 <p>Only difference is the different locations of <code>deployer/heroku/index.js</code> and <code>deployer/openshift.js</code> causing the <code>..\..</code> part of <em>Heroku</em> is one level deeper than the <em>OpenShift</em> one.</p>
-<h3 id="What_Really_Went_Wrong">What Really Went Wrong</h3>
+<h4 id="What_Really_Went_Wrong">What Really Went Wrong</h4>
 <p>Yes! The <code>..\..</code> part. It is one level deeper than it actually need for both <em>Heroku</em> and <em>OpenShift</em>.</p>
 <p>And maybe in that <code>catch</code> statement where I added a line of logging should have something similar there, letting people know what and where is the bug.</p>
 <h3 id="What’s_More">What’s More</h3>
@@ -224,7 +224,7 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="qnui3t66qhc6k5un" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="7u0z24uxqfis5psq" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/04/25/fixing-hexos-deployer/#disqus_thread" class="article-comment-link">Comments</a>
       
