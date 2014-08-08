@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://nickTD.com/"/>
-  <updated>2014-08-08T02:46:59.030Z</updated>
+  <updated>2014-08-08T02:50:16.967Z</updated>
   <id>http://nickTD.com/</id>
   
   <author>
@@ -19,11 +19,13 @@
     <link href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/"/>
     <id>http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/</id>
     <published>2014-08-08T02:46:58.000Z</published>
-    <updated>2014-08-08T02:46:58.000Z</updated>
+    <updated>2014-08-08T02:50:16.000Z</updated>
     <content type="html"><![CDATA[<h2 id="The_Idea">The Idea</h2>
 <p>When I went through all the parts inside Freetronics Experiment Kit, and when I saw the RGB LED lie inside the kit, I had this idea of continuous changing color LED. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
 <h2 id="Connect_the_Hardware">Connect the Hardware</h2>
 <p>Follow instructions of “Project 7:RGB LED” on page 32 in <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>.</p>
+<h2 id="Github_Repo">Github Repo</h2>
+<p>You can find the source file in this Github repo: <a href="https://github.com/NicholasTD07/freetronics" target="_blank">https://github.com/NicholasTD07/freetronics</a></p>
 <h2 id="Software">Software</h2>
 <p>To help people new to programming, I decided that every new version only makes a small change to the older one.</p>
 <h3 id="V1">V1</h3>
@@ -73,7 +75,7 @@
 </pre></td></tr></table></figure>
 
 
-<p>This snippet of code will setup the pin mode for the pins on RGB LED and then do nothing since there’s no code inside function <code>loop</code>.</p>
+<p>This snippet of code will setup the pin mode for the pins on RGB LED and give RGB LED a random color, then do nothing since there’s no code inside function <code>loop</code>.</p>
 <a id="more"></a>
 
 <h3 id="V2">V2</h3>
@@ -161,6 +163,8 @@
 <p>When I went through all the parts inside Freetronics Experiment Kit, and when I saw the RGB LED lie inside the kit, I had this idea of continuous changing color LED. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
 <h2 id="Connect_the_Hardware">Connect the Hardware</h2>
 <p>Follow instructions of “Project 7:RGB LED” on page 32 in <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>.</p>
+<h2 id="Github_Repo">Github Repo</h2>
+<p>You can find the source file in this Github repo: <a href="https://github.com/NicholasTD07/freetronics" target="_blank">https://github.com/NicholasTD07/freetronics</a></p>
 <h2 id="Software">Software</h2>
 <p>To help people new to programming, I decided that every new version only makes a small change to the older one.</p>
 <h3 id="V1">V1</h3>
@@ -210,7 +214,7 @@
 </pre></td></tr></table></figure>
 
 
-<p>This snippet of code will setup the pin mode for the pins on RGB LED and then do nothing since there’s no code inside function <code>loop</code>.</p>
+<p>This snippet of code will setup the pin mode for the pins on RGB LED and give RGB LED a random color, then do nothing since there’s no code inside function <code>loop</code>.</p>
 ]]></summary>
     
   </entry>
