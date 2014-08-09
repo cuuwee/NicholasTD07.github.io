@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Use Freetronics to Build Continuous Color Changing RGB Light | nickTD.dev</title>
+  <title>Use Freetronics Experimenters Kit to Build Continuously Changing Color RGB Light | nickTD.dev</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta content="article" property="og:type">
-<meta content="Use Freetronics to Build Continuous Color Changing RGB Light" property="og:title">
+<meta content="Use Freetronics Experimenters Kit to Build Continuously Changing Color RGB Light" property="og:title">
 <meta content="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" property="og:url">
 <meta property="og:image">
 <meta content="nickTD.dev" property="og:site_name">
 <meta content="The Idea
-When I went through all the parts inside Freetronics Experiment Kit, and when I saw the RGB LED lie inside the kit, I had this idea of continuous changing color LED. I had this image in my mi" property="og:description">
+When I went through all the parts inside Freetronics Experimenters Kit, and when I saw the RGB LED lie inside the kit, I had this idea that this LED continuously changes its color. I had this" property="og:description">
 <meta content="summary" name="twitter:card">
 <meta content="NicholasTD07" name="twitter:creator">
   
@@ -88,7 +88,7 @@ When I went through all the parts inside Freetronics Experiment Kit, and when I 
         
   
     <h1 class="article-title" itemprop="name">
-      Use Freetronics to Build Continuous Color Changing RGB Light
+      Use Freetronics Experimenters Kit to Build Continuously Changing Color RGB Light
     </h1>
   
 
@@ -97,7 +97,11 @@ When I went through all the parts inside Freetronics Experiment Kit, and when I 
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="The_Idea">The Idea</h2>
-<p>When I went through all the parts inside Freetronics Experiment Kit, and when I saw the RGB LED lie inside the kit, I had this idea of continuous changing color LED. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
+<p>When I went through all the parts inside Freetronics Experimenters Kit, and when I saw the RGB LED lie inside the kit, I had this idea that this LED continuously changes its color. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
+<h2 id="Demo_Video">Demo Video</h2>
+<p>Because I used iPhone’s camera to capture the video, and the RGB LED is too bright for the camera(even after I set the maximum value of the color to 60 which is pretty low), the beautiful transition from one color to another can be barely seen in the video.</p>
+<p>Video Link: <a href="http://youtu.be/MyuLrNblgDo" target="_blank">http://youtu.be/MyuLrNblgDo</a></p>
+<p>However, you can download the code from the Github repo which is mentioned below and try it on your own Experimenters Kit after you set up the hardware.</p>
 <h2 id="Connect_the_Hardware">Connect the Hardware</h2>
 <p>Follow instructions of “Project 7:RGB LED” on page 32 in <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>.</p>
 <h2 id="Github_Repo">Github Repo</h2>
@@ -223,7 +227,15 @@ When I went through all the parts inside Freetronics Experiment Kit, and when I 
 
 
 <h4 id="V3-2">V3.2</h4>
-<p>To Be Continued.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+</pre></td><td class="code"><pre><span class="keyword">void</span> loop() {
+  <span class="comment">// When current colors match target color</span>
+}
+</pre></td></tr></table></figure>
+
+
 <h3 id="Possible_Pitfalls">Possible Pitfalls</h3>
 <h4 id="Output_to_one_pin_at_a_time">Output to one pin at a time</h4>
 <p>If all the pins on RGB LED don’t get updated at the same time, the voltage of the pin which doesn’t get updated won’t hold. And that means actually the value on that pin will change, the color too.</p>
@@ -238,7 +250,7 @@ When I went through all the parts inside Freetronics Experiment Kit, and when I 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="z40qyvvlyer77d9t" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="k2jghbqvh7ozegul" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/#disqus_thread" class="article-comment-link">Comments</a>
       
