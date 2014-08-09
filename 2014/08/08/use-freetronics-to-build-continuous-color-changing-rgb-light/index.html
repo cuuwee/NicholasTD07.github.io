@@ -106,6 +106,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>Follow instructions of “Project 7:RGB LED” on page 32 in <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>.</p>
 <h2 id="Github_Repo">Github Repo</h2>
 <p>You can find the source file in this Github repo: <a href="https://github.com/NicholasTD07/freetronics" target="_blank">https://github.com/NicholasTD07/freetronics</a></p>
+<p>Source file: <a href="https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino" target="_blank">https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino</a></p>
 <h2 id="Software">Software</h2>
 <p>To help people new to programming, I decided that every new version only makes a small change to the older one.</p>
 <h3 id="V1">V1</h3>
@@ -131,23 +132,23 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 19
 20
 21
-</pre></td><td class="code"><pre><span class="keyword">int</span> leds[] = {<span class="number">5</span>, <span class="number">6</span>, <span class="number">9</span>};
+</pre></td><td class="code"><pre><span class="keyword">int</span> ledPins[] = {<span class="number">5</span>, <span class="number">6</span>, <span class="number">9</span>};
 <span class="comment">// RGB pins.</span>
 <span class="comment">// Change this according to your own hardware setting.</span>
 
 <span class="keyword">void</span> setup() {
   <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(leds[thisLed], OUTPUT);
-    analogWrite(leds[thisLed], randomColor());
+    pinMode(ledPins[thisLed], OUTPUT);
+    analogWrite(ledPins[thisLed], randomColor());
   }
 }
 
-<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> K_COLOR_MIN = <span class="number">0</span>;
-<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> K_COLOR_MAX = <span class="number">255</span>;
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kColorValueMin = <span class="number">0</span>;
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kColorValueMax = <span class="number">255</span>;
 
 <span class="comment">// Generate random color value from K_COLOR_MIN, to K_COLOR_MAX.</span>
 <span class="keyword">int</span> randomColor() {
-  <span class="keyword">return</span> random(K_COLOR_MIN, K_COLOR_MAX);
+  <span class="keyword">return</span> random(kColorValueMin, kColorValueMax);
 }
 
 <span class="keyword">void</span> loop() {
@@ -168,7 +169,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 6
 </pre></td><td class="code"><pre><span class="keyword">void</span> loop() {
   <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    analogWrite(leds[thisLed], randomColor());
+    analogWrite(ledPins[thisLed], randomColor());
   }
   delay(<span class="number">500</span>); <span class="comment">// 500 milliseconds = 0.5 seconds</span>
 }
@@ -177,7 +178,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 <p>As you can see that we almost copied the code in <code>setup</code>. But we call function <code>delay</code> after setting RGB LED to a different color. The <code>delay</code> function “tells the Arduino to stop doing anything until a certain period of time is up.”(copied from <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>) That’s why there’s a 0.5 second pause from one change of color to another.</p>
 <h3 id="V2-5">V2.5</h3>
-<p>This line saying <code>analogWrite(leds[thisLed], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
+<p>This line saying <code>analogWrite(ledPins[thisLed], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -187,14 +188,14 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<p>And changes <code>analogWrite(leds[thisLed], randomColor());</code> to <code>setLed(leds[thisLed], randomColor());</code>.</p>
+<p>And changes <code>analogWrite(ledPins[thisLed], randomColor());</code> to <code>setLed(ledPins[thisLed], randomColor());</code>.</p>
 <p>You might wonder: “It’s still duplicated code. How’s this better?”</p>
 <p><!-- TODO --><br>First of all, it gives the duplicated code a name. Without a proper name, meaning of a block of a code maybe not that obvious as it is to you to others reading your code.<br>Second of all, it cut down our code which depends on other code. This can be handy. Let’s say function <code>analogWrite</code> was renamed to <code>writeToAnalog</code>, then with this refactored code, you only need to make this change once.</p>
-<p>(If you come up with something else why this refactoring is good, please feel free to reply in the comment :D)</p>
+<p>(If you come up with something else why this refactoring is good, please feel free to leave me a comment. :D)</p>
 <h3 id="V3">V3</h3>
 <p>Now, the color of LED changes periodically. But there’s no transition from one color to another. Let’s add that.</p>
 <h4 id="V3-1">V3.1</h4>
-<p>First, we need two variables to record current colors and target colors. And we want to generate two sets of random colors, one as LED’s current color, another as the target color.</p>
+<p>First, we need two variables to record current colors and target colors. And we want to generate two sets(since we have Red, Green, and Blue on RGB LED) of random color values, one as LED’s current color, another as the target color.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -214,10 +215,10 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 <span class="keyword">void</span> setup() {
   <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(leds[thisLed], OUTPUT);
+    pinMode(ledPins[thisLed], OUTPUT);
 
     <span class="keyword">int</span> currentValue = randomColor();
-    setLed(leds[thisLed], currentValue);
+    setLed(ledPins[thisLed], currentValue);
 
     currentValues[thisLed] = currentValue;
     targetValues[thisLed] = randomColor();
@@ -227,18 +228,186 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 
 <h4 id="V3-2">V3.2</h4>
+<p>If we want the color changes from one to another gradually, then we need to:</p>
+<ol>
+<li>Have 2 sets of color values, one is current, another is the set of target colors. Already done!</li>
+<li>Every time only change the color values by a small amount.</li>
+<li>Test if current colors match target color once a while.</li>
+<li>If they do match, make a new set of target colors.</li>
+<li>Last but not least, delay for a while. Otherwise the LED will change its color like crazy. :P</li>
+</ol>
+<p>Translate those into code, (replace your function <code>loop</code> with this one)</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
+4
+5
+6
+7
+8
+9
+10
 </pre></td><td class="code"><pre><span class="keyword">void</span> loop() {
-  <span class="comment">// When current colors match target color</span>
+  updateAllColorsOnLED(); <span class="comment">// Change all three LEDs' color values</span>
+  
+  <span class="comment">// Test current colors match target color</span>
+  <span class="keyword">if</span> (currentColorsAreCloseToTargetColors()) {
+    makeNewTargetColors();
+  }
+
+  delayForAShortTime();
 }
 </pre></td></tr></table></figure>
 
 
+<p>It won’t compile/upload. Because these functions do not exist yet. We are going to write it now. Why don’t we write those functions first? </p>
+<p>From my own experience, when a process can be easily decomposed into smaller steps, I prefer Top-down design(decomposition). With Top-down design, I think, one advantage is that you won’t be overwhelmed by the details since every time you are only going one level deeper. Every time I only need to think about one level of the whole problem. And I know all the upper levels are already solved and all the lower levels will be solved but, hey, they are NOT my problems NOW. :D</p>
+<p>If you don’t know what Top down design or decomposition means, I recommend watching Lecture 3 of <strong>Programming Methodology</strong> by Stanford University to get a basic understanding of Top down design and decomposition. Video Link: <a href="http://youtu.be/C5HeRliZ0Ns?t=13m" target="_blank">http://youtu.be/C5HeRliZ0Ns?t=13m</a> Hope you enjoy. Whether you like it or not, if you want to share anything just leave me a comment. :D</p>
+<p>For more information, Google <strong>Top down design</strong>.</p>
+<h4 id="V3-3-1_-_Implementing_currentColorsAreCloseToTargetColors">V3.3.1 - Implementing <code>currentColorsAreCloseToTargetColors</code></h4>
+<p>If anyone of the currentValues aren’t close to the corresponding one in targetValues, then return <code>false</code> which is “not true” in programming language(in this case, we are actually using C++).</p>
+<p>P.S. The code in this article is almost using C, except for <code>bool</code> which is a C++ built-in type.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="keyword">bool</span> currentColorsAreCloseToTargetColors() {
+  <span class="keyword">for</span> (<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
+    <span class="keyword">if</span> (colorsAreNotClose(currentValues[thisLed], targetValues[thisLed])) {
+      <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+  }
+  <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<p>Why not <code>currentValues[thisLed] != targetValues[thisLed]</code>?<br>What if every time when we change the value, the change is not 1?</p>
+<h4 id="V3-3-2_-_Implementing_colorsAreNotClose">V3.3.2 - Implementing <code>colorsAreNotClose</code></h4>
+<p>Easy one. No further explanation. :D</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kMultiple = <span class="number">2</span>;
+<span class="keyword">bool</span> colorsAreNotClose(<span class="keyword">int</span> currentValue, <span class="keyword">int</span> targetValue) {
+  <span class="keyword">if</span> (currentValue &lt; targetValue - kMultiple * kChangeStep) {
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+  } <span class="keyword">else</span> <span class="keyword">if</span> (currentValue &gt; target + kMultiple * kChangeStep) {
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+  }
+  <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<h4 id="V3-4-1_-_Implementing_updateAllColorsOnLED">V3.4.1 - Implementing <code>updateAllColorsOnLED</code></h4>
+<p>The function name is pretty self-explanatory.</p>
+<p>Have a look at <a href="#output-to-one-pin-at-a-time">Output to one pin at a time</a> to find out why we are updating all three colors at the same time.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="keyword">void</span> updateAllColorsOnLED() {
+  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
+    updateLedAtIndex(thisLed);
+  }
+}
+
+<span class="keyword">void</span> updateLedAtIndex(<span class="keyword">int</span> index) {
+  <span class="keyword">if</span> (needIncreaseValueAtIndex(index)) {
+    increaseLedCurrentValueAtIndex(index);
+  } <span class="keyword">else</span> {
+    decreaseLedCurrentValueAtIndex(index);
+  }
+}
+</pre></td></tr></table></figure>
+
+
+<p>Why using functions rather than <code>value++;</code> or <code>values[index] += 1;</code> to change the current value?</p>
+<ol>
+<li>It has a name which provides a explanation of the code inside.</li>
+<li>It’s easier to make change (i.e. adding functionality or changing the step value, the “+1”) while keeping code clean.</li>
+<li>When changing the value it needs validation because the value is given to the chip through <code>analogWrite(pin, value)</code>, where the value has a maximum value of 255, and a minimum value of 0.</li>
+</ol>
+<h4 id="V3-4-2_Functions_for_updateLedAtIndex">V3.4.2 Functions for <code>updateLedAtIndex</code></h4>
+<p>Because of the need to validate value after it is changed, we check the value after increasing and decreasing it. Then give this value to LED.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="code"><pre><span class="keyword">bool</span> needIncreaseValueAtIndex(<span class="keyword">int</span> index) {
+  <span class="keyword">return</span> currentValues[index] &lt; targetValues[index]
+}
+
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kChangeStep = <span class="number">1</span>;
+
+<span class="keyword">void</span> increaseLedCurrentValueAtIndex(<span class="keyword">int</span> index) {
+  currentValues[index] += kChangeStep;
+  checkCurrentValueAtIndex(index);
+  setLed(ledPins[index], currentValues[index]);
+}
+
+<span class="keyword">void</span> increaseLedCurrentValueAtIndex(<span class="keyword">int</span> index) {
+  currentValues[index] -= kChangeStep;
+  checkCurrentValueAtIndex(index);
+  setLed(ledPins[index], currentValues[index]);
+}
+
+<span class="keyword">void</span> checkCurrentValueAtIndex(<span class="keyword">int</span> index) {
+  <span class="keyword">if</span> (currentValues[index] &lt; kColorValueMin) {
+    currentValues[index] = kColorValueMin;
+  } <span class="keyword">else</span> <span class="keyword">if</span> (currentValues[index] &gt; kColorValueMax) {
+    currentValues[index] = kColorValueMax;    
+  }
+}
+</pre></td></tr></table></figure>
+
+
+<p><strong>To be continued.</strong></p>
 <h3 id="Possible_Pitfalls">Possible Pitfalls</h3>
+<p><a name="output-to-one-pin-at-a-time"></a></p>
 <h4 id="Output_to_one_pin_at_a_time">Output to one pin at a time</h4>
-<p>If all the pins on RGB LED don’t get updated at the same time, the voltage of the pin which doesn’t get updated won’t hold. And that means actually the value on that pin will change, the color too.</p>
+<p>If all the pins on RGB LED don’t get updated at the same time, and values/voltages on some pins don’t get updated, then the actual values/voltages will decrease. And that means if you don’t update the value on one pin, the color will change by itself because of decrease of the voltage on the pin.</p>
 <h4 id="Reading_Values_from_OUTPUT_pin">Reading Values from OUTPUT pin</h4>
 <p>At the beginning of Version 3, I once thought, “Hey, why can’t I just get current values of RGB color by reading from the pins and compare those with my target values.”</p>
 <p>FAILED.</p>
@@ -246,11 +415,14 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>The pin mode of LED’s pins are all set to <code>OUTPUT</code>, which means it really just can’t read values <strong>IN</strong>. Well, I tried and it just doesn’t work this way.</p>
 <h2 id="The_End">The End</h2>
 <p>Feel free to ask me anything. :D</p>
+<h2 id="P-S-">P.S.</h2>
+<p>Since English is not my mother tongue, there could be possible grammar errors and misspelling in this article. And maybe sometimes I couldn’t express what I try to say.</p>
+<p>Please feel free to point out anything wrong or . Thanks. :P</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="k2jghbqvh7ozegul" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="m2ezs7g7xzqvmx4a" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/#disqus_thread" class="article-comment-link">Comments</a>
       

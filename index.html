@@ -107,6 +107,7 @@
 <p>Follow instructions of “Project 7:RGB LED” on page 32 in <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>.</p>
 <h2 id="Github_Repo">Github Repo</h2>
 <p>You can find the source file in this Github repo: <a href="https://github.com/NicholasTD07/freetronics" target="_blank">https://github.com/NicholasTD07/freetronics</a></p>
+<p>Source file: <a href="https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino" target="_blank">https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino</a></p>
 <h2 id="Software">Software</h2>
 <p>To help people new to programming, I decided that every new version only makes a small change to the older one.</p>
 <h3 id="V1">V1</h3>
@@ -132,23 +133,23 @@
 19
 20
 21
-</pre></td><td class="code"><pre><span class="keyword">int</span> leds[] = {<span class="number">5</span>, <span class="number">6</span>, <span class="number">9</span>};
+</pre></td><td class="code"><pre><span class="keyword">int</span> ledPins[] = {<span class="number">5</span>, <span class="number">6</span>, <span class="number">9</span>};
 <span class="comment">// RGB pins.</span>
 <span class="comment">// Change this according to your own hardware setting.</span>
 
 <span class="keyword">void</span> setup() {
   <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(leds[thisLed], OUTPUT);
-    analogWrite(leds[thisLed], randomColor());
+    pinMode(ledPins[thisLed], OUTPUT);
+    analogWrite(ledPins[thisLed], randomColor());
   }
 }
 
-<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> K_COLOR_MIN = <span class="number">0</span>;
-<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> K_COLOR_MAX = <span class="number">255</span>;
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kColorValueMin = <span class="number">0</span>;
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kColorValueMax = <span class="number">255</span>;
 
 <span class="comment">// Generate random color value from K_COLOR_MIN, to K_COLOR_MAX.</span>
 <span class="keyword">int</span> randomColor() {
-  <span class="keyword">return</span> random(K_COLOR_MIN, K_COLOR_MAX);
+  <span class="keyword">return</span> random(kColorValueMin, kColorValueMax);
 }
 
 <span class="keyword">void</span> loop() {
@@ -166,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="k2jghbqvh7ozegul" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/" data-id="m2ezs7g7xzqvmx4a" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -220,7 +221,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="72ow9bo3jj78jyvh" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/04/25/fixing-hexos-deployer/" data-id="zwfyey99mi1suijj" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/04/25/fixing-hexos-deployer/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -312,7 +313,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://nickTD.com/2014/04/21/2014-04-21-hello-world/" data-id="u5q6pv4xv363l4qw" class="article-share-link">Share</a>
+      <a data-url="http://nickTD.com/2014/04/21/2014-04-21-hello-world/" data-id="14xa1ku764iwpgm2" class="article-share-link">Share</a>
       
         <a href="http://nickTD.com/2014/04/21/2014-04-21-hello-world/#disqus_thread" class="article-comment-link">Comments</a>
       
