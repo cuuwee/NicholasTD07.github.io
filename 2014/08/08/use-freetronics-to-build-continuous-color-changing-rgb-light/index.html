@@ -109,7 +109,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>Source file: <a href="https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino" target="_blank">https://github.com/NicholasTD07/freetronics/blob/master/continuous_changing_color_RGB_LED/continuous_changing_color_RGB_LED.ino</a></p>
 <h2 id="Software">Software</h2>
 <p>To help people new to programming, I decided that every new version only makes a small change to the older one.</p>
-<h3 id="V1">V1</h3>
+<h3 id="V1_Simple_Start">V1 Simple Start</h3>
 <p>Let’s start with something simple: giving RGB LED a random color when we start the kit.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -159,7 +159,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>This snippet of code will setup the pin mode for the pins on RGB LED and give RGB LED a random color, then do nothing since there’s no code inside function <code>loop</code>.</p>
 <a id="more"></a>
 
-<h3 id="V2">V2</h3>
+<h3 id="V2_Random_Color_Every_0-5_Second">V2 Random Color Every 0.5 Second</h3>
 <p>Let’s say we want the color of the RGB LED changes every 0.5 second. Then the only change is inside <code>loop</code> function and it should look like this:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -177,7 +177,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 
 <p>As you can see that we almost copied the code in <code>setup</code>. But we call function <code>delay</code> after setting RGB LED to a different color. The <code>delay</code> function “tells the Arduino to stop doing anything until a certain period of time is up.”(copied from <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>) That’s why there’s a 0.5 second pause from one change of color to another.</p>
-<h3 id="V2-5">V2.5</h3>
+<h3 id="V2-5_Refactoring">V2.5 Refactoring</h3>
 <p>This line saying <code>analogWrite(ledPins[thisLed], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -192,9 +192,9 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>You might wonder: “It’s still duplicated code. How’s this better?”</p>
 <p><!-- TODO --><br>First of all, it gives the duplicated code a name. Without a proper name, meaning of a block of a code maybe not that obvious as it is to you to others reading your code.<br>Second of all, it cut down our code which depends on other code. This can be handy. Let’s say function <code>analogWrite</code> was renamed to <code>writeToAnalog</code>, then with this refactored code, you only need to make this change once.</p>
 <p>(If you come up with something else why this refactoring is good, please feel free to leave me a comment. :D)</p>
-<h3 id="V3">V3</h3>
+<h3 id="V3_Add_Transition_Between_One_Color_to_Another">V3 Add Transition Between One Color to Another</h3>
 <p>Now, the color of LED changes periodically. But there’s no transition from one color to another. Let’s add that.</p>
-<h4 id="V3-1">V3.1</h4>
+<h4 id="V3-1_Keep_Record">V3.1 Keep Record</h4>
 <p>First, we need two variables to record current colors and target colors. And we want to generate two sets(since we have Red, Green, and Blue on RGB LED) of random color values, one as LED’s current color, another as the target color.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -227,7 +227,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<h4 id="V3-2">V3.2</h4>
+<h4 id="V3-2_Create_The_loop">V3.2 Create The <code>loop</code></h4>
 <p>If we want the color changes from one to another gradually, then we need to:</p>
 <ol>
 <li>Have 2 sets of color values, one is current, another is the set of target colors. Already done!</li>
