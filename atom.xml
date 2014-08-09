@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://nickTD.com/"/>
-  <updated>2014-08-09T05:06:48.146Z</updated>
+  <updated>2014-08-09T05:36:43.818Z</updated>
   <id>http://nickTD.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/"/>
     <id>http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/</id>
     <published>2014-08-08T02:46:58.000Z</published>
-    <updated>2014-08-09T05:06:48.000Z</updated>
+    <updated>2014-08-09T05:13:41.000Z</updated>
     <content type="html"><![CDATA[<h2 id="The_Idea">The Idea</h2>
 <p>When I went through all the parts inside Freetronics Experimenters Kit, and when I saw the RGB LED lie inside the kit, I had this idea that this LED continuously changes its color. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
 <h2 id="Demo_Video">Demo Video</h2>
@@ -79,7 +79,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>This snippet of code will setup the pin mode for the pins on RGB LED and give RGB LED a random color, then do nothing since there’s no code inside function <code>loop</code>.</p>
 <a id="more"></a>
 
@@ -99,7 +98,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>As you can see that we almost copied the code in <code>setup</code>. But we call function <code>delay</code> after setting RGB LED to a different color. The <code>delay</code> function “tells the Arduino to stop doing anything until a certain period of time is up.”(copied from <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>) That’s why there’s a 0.5 second pause from one change of color to another.</p>
 <h3 id="V2-1_Refactoring">V2.1 Refactoring</h3>
 <p>This line saying <code>analogWrite(ledPins[index], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
@@ -110,7 +108,6 @@
   analogWrite(led, color);    
 }
 </pre></td></tr></table></figure>
-
 
 <p>And changes <code>analogWrite(ledPins[index], randomColor());</code> to <code>setLed(ledPins[index], randomColor());</code>.</p>
 <p>You might wonder: “It’s still duplicated code. How’s this better?”</p>
@@ -150,7 +147,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <h4 id="V3-2_Create_The_loop">V3.2 Create The <code>loop</code></h4>
 <h4 id="V3-2-1">V3.2.1</h4>
 <p>If we want the color changes from one to another gradually, then we need to:</p>
@@ -184,7 +180,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>It won’t compile/upload. Because these functions do not exist yet. We are going to write it now. Why don’t we write those functions first? </p>
 <p>From my own experience, when a process can be easily decomposed into smaller steps, I prefer Top-down design(decomposition). With Top-down design, I think, one advantage is that you won’t be overwhelmed by the details since every time you are only going one level deeper. Every time I only need to think about one level of the whole problem. And I know all the upper levels are already solved and all the lower levels will be solved but, hey, they are NOT my problems NOW. :D</p>
 <p>If you don’t know what Top down design or decomposition means, I recommend watching Lecture 3 of <strong>Programming Methodology</strong> by Stanford University to get a basic understanding of Top down design and decomposition. Video Link: <a href="http://youtu.be/C5HeRliZ0Ns?t=13m" target="_blank">http://youtu.be/C5HeRliZ0Ns?t=13m</a> Hope you enjoy. Whether you like it or not, if you want to share anything just leave me a comment. :D</p>
@@ -207,7 +202,6 @@
 
 <span class="keyword">void</span> delayForAShortTime() { }
 </pre></td></tr></table></figure>
-
 
 <p>Voila, it compiles! :D</p>
 <p>You can put it anywhere you like, as long as it is in the same file. Personally I would prefer to put it under the <code>loop</code> function. </p>
@@ -273,7 +267,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>Think about this: what if every time when we change the value, the change is not 1?</p>
 <p>With this code we can change the <code>kChangeStep</code> to anything we want. Isn’t that great?</p>
 <h4 id="V3-3-2_Implementing_makeNewTargetColors_and_delayForAShortTime">V3.3.2 Implementing <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
@@ -299,7 +292,6 @@
   delay(kDelayTime);
 }
 </pre></td></tr></table></figure>
-
 
 <p>Because of the complexity of function <code>updateAllColorsOnLED</code>, I put it in another subversion.</p>
 <h4 id="V3-4-1_Implementing_updateAllColorsOnLED">V3.4.1 Implementing <code>updateAllColorsOnLED</code></h4>
@@ -332,7 +324,6 @@
   }
 }
 </pre></td></tr></table></figure>
-
 
 <p>Why using functions rather than <code>value++;</code> or <code>values[index] += 1;</code> to change the current value?</p>
 <ol>
@@ -382,7 +373,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>Validation is very simple. Just check whether the value goes below <code>kColorValueMin</code> or go over <code>kColorValueMax</code>. If so, we correct it.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -399,7 +389,6 @@
   }
 }
 </pre></td></tr></table></figure>
-
 
 <h3 id="Done!">Done!</h3>
 <p>Now try this on your Experimenters Kit! Have fun with the continuously changing color RGB LED.</p>
@@ -477,7 +466,6 @@
 }
 </pre></td></tr></table></figure>
 
-
 <p>This snippet of code will setup the pin mode for the pins on RGB LED and give RGB LED a random color, then do nothing since there’s no code inside function <code>loop</code>.</p>
 ]]></summary>
     
@@ -496,7 +484,6 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
 </pre></td></tr></table></figure>
-
 
 <p>And, that <code>../..</code> is one level deeper than it needs to be.</p>
 <p>Case closed. :D</p>
@@ -524,7 +511,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
     <span class="keyword">at</span> Object.cb [<span class="keyword">as</span> oncomplete] (fs.js:<span class="number">168</span>:<span class="number">19</span>)</span>
 </pre></td></tr></table></figure>
 
-
 <p>So I looked into <code>plugins/console/deploy.js</code>, and I added <code>log.i(&#39;deployers: &#39;, deployer);</code> after this block of code.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre>1
 2
@@ -537,7 +523,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
     extend = hexo.extend,
     deployer = extend.deployer.list();
 </pre></td></tr></table></figure>
-
 
 <p>Then this came up. <code>[info] deployers:  { git: [Function], github: [Function] }</code><br>That’s when I found that Heroku Deployer was not registered with two other deployers not registered, e.g. <em>openshift, rysnc</em>.</p>
 <h3 id="How_Hexo_Loads_All_Deployers">How Hexo Loads All Deployers</h3>
@@ -579,7 +564,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 }, // <span class="keyword">...</span> more code
 </pre></td></tr></table></figure>
 
-
 <ol>
 <li><code>hexo/lib/loaders/extend.js</code> loads <em>Deploy Plugin</em> with this line:</li>
 </ol>
@@ -595,7 +579,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 }
 </pre></td></tr></table></figure>
 
-
 <p>In our case item is the deployer.</p>
 <ol>
 <li>At last <code>hexo/lib/plugins/deployer/index.js</code> loads all deployers.</li>
@@ -605,7 +588,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
 </pre></td></tr></table></figure>
-
 
 <p>Only difference is the different locations of <code>deployer/heroku/index.js</code> and <code>deployer/openshift.js</code> causing the <code>..\..</code> part of <em>Heroku</em> is one level deeper than the <em>OpenShift</em> one.</p>
 <h4 id="What_Really_Went_Wrong">What Really Went Wrong</h4>
@@ -625,7 +607,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
   repo: <span class="keyword">...</span>
 </pre></td></tr></table></figure>
 
-
 ]]></content>
     <summary type="html"><![CDATA[<h2 id="Missing_Deployers_in_Heroku">Missing Deployers in Heroku</h2>
 <p>Some Deployers were not registered when they should be.</p>
@@ -634,7 +615,6 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 <figure class="highlight"><table><tr><td class="gutter"><pre>1
 </pre></td><td class="code"><pre>commitMessage = <span class="keyword">require</span>(<span class="string">'../../util'</span>).commitMessage;
 </pre></td></tr></table></figure>
-
 
 <p>And, that <code>../..</code> is one level deeper than it needs to be.</p>
 <p>Case closed. :D</p>
@@ -652,11 +632,8 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
     <updated>2014-04-25T09:05:27.000Z</updated>
     <content type="html"><![CDATA[<p>I am leaving Octopress for <a href="http://hexo.io" target="_blank">Hexo</a>.</p>
 <h3 id="What_is_Hexo?">What is Hexo?</h3>
-<blockquote>
-
-<p>Hexo is a fast, simple and powerful blog framework. It parses your posts with Markdown or other render engine and generates static files with the beautiful theme. All of these just take seconds.</p>
+<blockquote><p>Hexo is a fast, simple and powerful blog framework. It parses your posts with Markdown or other render engine and generates static files with the beautiful theme. All of these just take seconds.</p>
 <footer><strong>Hexo</strong><cite><a href="http://hexo.io/docs" target="_blank">hexo.io/docs/</a></cite></footer></blockquote>
-
 
 
 <h3 id="So,_Octopress?">So, Octopress?</h3>
@@ -702,28 +679,18 @@ TypeError: Property <span class="string">'heroku'</span> <span class="keyword">o
 <h3 id="Excerpts_Plugin_-_The_“Read_on”_button">Excerpts Plugin - The “Read on” button</h3>
 <p>Just add <code>&lt;!-- more --&gt;</code> anywhere you want.</p>
 <h3 id="Blockquote">Blockquote</h3>
-<blockquote>
-
-<p>Flying is learning how to throw yourself at the ground and miss.</p>
+<blockquote><p>Flying is learning how to throw yourself at the ground and miss.</p>
 <footer><strong>Douglas Adams</strong><cite>The Hichhikers Guide to the Galaxy</cite></footer></blockquote>
 
 
-
 <h3 id="Pullquote_-_Well,_Hexo_is_not_that_good_at_Pullquote">Pullquote - Well, Hexo is not that good at Pullquote</h3>
-<blockquote class="pullquote class">
-
-<p>Surround your paragraph with the pull quote tags. Then when you come to<br>the text you want to pull, {“ surround it like this “} and that’s all there is to it.</p>
+<blockquote class="pullquote class"><p>Surround your paragraph with the pull quote tags. Then when you come to<br>the text you want to pull, {“ surround it like this “} and that’s all there is to it.</p>
 </blockquote>
 
 
 
-
-
-<blockquote class="pullquote left">
-
-<p>Left-aligning pullquotes are good to alternate breaks in the text. They’re<br>{“ almost exactly like the default, “} right pullquotes, but a little different.</p>
+<blockquote class="pullquote left"><p>Left-aligning pullquotes are good to alternate breaks in the text. They’re<br>{“ almost exactly like the default, “} right pullquotes, but a little different.</p>
 </blockquote>
-
 
 
 <p>If this line is not here, any line right below the quote will start from the middle, like how this line does.</p>
@@ -745,12 +712,10 @@ alphabet = <span class="string">'abcdefghijklmnopqrstuvwxyz'</span>
 </pre></td></tr></table></figure>
 
 
-
 <p>As you can see, start and mark don’t work here after a clean install of Octopress.</p>
 <p>See here: <a href="https://github.com/imathis/octopress/issues/1472" target="_blank">BUG: start, mark, and linenos don’t work in code blocks</a>.</p>
 <h5 id="Gist_Tag">Gist Tag</h5>
 <script src="https://gist.github.com/4321346.js"></script>
-
 
 
 <p>It looks different in Octopress from the documentation <a href="http://octopress.org/docs/plugins/gist-tag/" target="_blank">Gist Tag - Octopress</a></p>
@@ -768,8 +733,6 @@ alphabet = <span class="string">'abcdefghijklmnopqrstuvwxyz'</span>
 </pre></td></tr></table></figure>
 
 
-
-
 <figure class="highlight coffeescript"><figcaption><span>Coffeescript Tricks start:51 mark:52,54-55</span></figcaption><table><tr><td class="gutter"><pre>1
 2
 3
@@ -781,7 +744,6 @@ alphabet = <span class="string">'abcdefghijklmnopqrstuvwxyz'</span>
 <span class="comment"># Iterate over part of the alphabet:</span>
 <span class="built_in">console</span>.log letter <span class="keyword">for</span> letter <span class="keyword">in</span> alphabet[<span class="number">4.</span><span class="number">.8</span>]
 </pre></td></tr></table></figure>
-
 
 <p>Start and mark don’t work here either.</p>
 <h3 id="Current_Commit_for_Octopress">Current Commit for Octopress</h3>
@@ -796,11 +758,8 @@ Date:   Thu Apr <span class="number">3</span> <span class="number">23</span>:<sp
 </code></pre>]]></content>
     <summary type="html"><![CDATA[<p>I am leaving Octopress for <a href="http://hexo.io" target="_blank">Hexo</a>.</p>
 <h3 id="What_is_Hexo?">What is Hexo?</h3>
-<blockquote>
-
-<p>Hexo is a fast, simple and powerful blog framework. It parses your posts with Markdown or other render engine and generates static files with the beautiful theme. All of these just take seconds.</p>
+<blockquote><p>Hexo is a fast, simple and powerful blog framework. It parses your posts with Markdown or other render engine and generates static files with the beautiful theme. All of these just take seconds.</p>
 <footer><strong>Hexo</strong><cite><a href="http://hexo.io/docs" target="_blank">hexo.io/docs/</a></cite></footer></blockquote>
-
 
 
 <h3 id="So,_Octopress?">So, Octopress?</h3>
