@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://nickTD.com/"/>
-  <updated>2014-08-09T04:04:50.394Z</updated>
+  <updated>2014-08-09T05:04:10.970Z</updated>
   <id>http://nickTD.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/"/>
     <id>http://nickTD.com/2014/08/08/use-freetronics-to-build-continuous-color-changing-rgb-light/</id>
     <published>2014-08-08T02:46:58.000Z</published>
-    <updated>2014-08-09T04:04:50.000Z</updated>
+    <updated>2014-08-09T05:04:10.000Z</updated>
     <content type="html"><![CDATA[<h2 id="The_Idea">The Idea</h2>
 <p>When I went through all the parts inside Freetronics Experimenters Kit, and when I saw the RGB LED lie inside the kit, I had this idea that this LED continuously changes its color. I had this image in my mind that the color of the RGB LED just changes and never stop.</p>
 <h2 id="Demo_Video">Demo Video</h2>
@@ -215,29 +215,8 @@
 <p>Let’s start with easy ones.</p>
 <h4 id="V3-3-1_Implementing_currentColorsAreCloseToTargetColors">V3.3.1 Implementing <code>currentColorsAreCloseToTargetColors</code></h4>
 <p>If anyone of the currentValues aren’t close to the corresponding one in targetValues, then return <code>false</code> which is “not true” in programming language(in this case, we are actually using C++).</p>
+<p>Wait. Can’t we say that “if all currentValues are close to corresponding targetValues”? Yes. But after giving that a thought, I think what we are doing now is an easier approach. If you come up with something simpler/easier/more elegant, feel free to post the code in a comment. (Maybe using <a href="https://gist.github.com" target="_blank">https://gist.github.com</a>?)</p>
 <p>P.S. The code in this article is almost using C, except for <code>bool</code> which is a C++ built-in type.</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td><td class="code"><pre><span class="keyword">bool</span> currentColorsAreCloseToTargetColors() {
-  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
-    <span class="keyword">if</span> (colorsAreNotClose(currentValues[index], targetValues[index])) {
-      <span class="keyword">return</span> <span class="keyword">false</span>;
-    }
-  }
-  <span class="keyword">return</span> <span class="keyword">true</span>;
-}
-</pre></td></tr></table></figure>
-
-
-<p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>Think about this: what if every time when we change the value, the change is not 1?</p>
-<h4 id="V3-3-2_Implementing_colorsAreNotClose,_makeNewTargetColors_and_delayForAShortTime">V3.3.2 Implementing <code>colorsAreNotClose</code>, <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
-<p>Simple and self-explanatory code. No further explanation. :D</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -258,17 +237,58 @@
 18
 19
 20
-</pre></td><td class="code"><pre><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kMultiple = <span class="number">2</span>;
-<span class="keyword">bool</span> colorsAreNotClose(<span class="keyword">int</span> currentValue, <span class="keyword">int</span> targetValue) {
-  <span class="keyword">if</span> (currentValue &lt; targetValue - kMultiple * kChangeStep) {
-    <span class="keyword">return</span> <span class="keyword">false</span>;
-  } <span class="keyword">else</span> <span class="keyword">if</span> (currentValue &gt; target + kMultiple * kChangeStep) {
-    <span class="keyword">return</span> <span class="keyword">false</span>;
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="code"><pre><span class="keyword">bool</span> currentColorsAreCloseToTargetColors() {
+  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    <span class="keyword">if</span> (colorsAreNotClose(currentValues[index], targetValues[index])) {
+      <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
   }
   <span class="keyword">return</span> <span class="keyword">true</span>;
 }
 
-<span class="keyword">void</span> makeNewTargetColors() {
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kMultiple = <span class="number">2</span>;
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kChangeStep = <span class="number">1</span>;
+<span class="comment">// This line will need to be moved</span>
+<span class="comment">// to above function `increaseLedCurrentValueAtIndex`</span>
+
+<span class="comment">/*
+  Returns false if currentValue is not in the range of
+  [targetValue - kMultiple * kChangeStep, targetValue + kMultiple * kChangeStep]
+
+*/</span>
+<span class="keyword">bool</span> colorsAreNotClose(<span class="keyword">int</span> currentValue, <span class="keyword">int</span> targetValue) {
+  <span class="keyword">if</span> (currentValue &lt; targetValue - kMultiple * kChangeStep) {
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  } <span class="keyword">else</span> <span class="keyword">if</span> (currentValue &gt; targetValue + kMultiple * kChangeStep) {
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  }
+  <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+</pre></td></tr></table></figure>
+
+
+<p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>Think about this: what if every time when we change the value, the change is not 1?</p>
+<p>With this code we can change the <code>kChangeStep</code> to anything we want. Isn’t that great?</p>
+<h4 id="V3-3-2_Implementing_makeNewTargetColors_and_delayForAShortTime">V3.3.2 Implementing <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
+<p>Simple and self-explanatory code. No further explanation. :D</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="keyword">void</span> makeNewTargetColors() {
   <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
     targetValues[index] = randomColor();
   }
@@ -339,11 +359,15 @@
 15
 16
 17
+18
+19
 </pre></td><td class="code"><pre><span class="keyword">bool</span> needsIncreaseValueAtIndex(<span class="keyword">int</span> index) {
-  <span class="keyword">return</span> currentValues[index] &lt; targetValues[index]
+  <span class="keyword">return</span> currentValues[index] &lt; targetValues[index];
 }
 
 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kChangeStep = <span class="number">1</span>;
+<span class="comment">// This line is moved up</span>
+<span class="comment">// from the top of function `colorsAreNotClose`.</span>
 
 <span class="keyword">void</span> increaseLedCurrentValueAtIndex(<span class="keyword">int</span> index) {
   currentValues[index] += kChangeStep;
@@ -351,7 +375,7 @@
   setLed(ledPins[index], currentValues[index]);
 }
 
-<span class="keyword">void</span> increaseLedCurrentValueAtIndex(<span class="keyword">int</span> index) {
+<span class="keyword">void</span> decreaseLedCurrentValueAtIndex(<span class="keyword">int</span> index) {
   currentValues[index] -= kChangeStep;
   checkCurrentValueAtIndex(index);
   setLed(ledPins[index], currentValues[index]);
