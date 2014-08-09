@@ -228,6 +228,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 
 <h4 id="V3-2_Create_The_loop">V3.2 Create The <code>loop</code></h4>
+<h4 id="V3-2-1">V3.2.1</h4>
 <p>If we want the color changes from one to another gradually, then we need to:</p>
 <ol>
 <li>Have 2 sets of color values, one is current, another is the set of target colors. Already done!</li>
@@ -251,7 +252,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
   updateAllColorsOnLED(); <span class="comment">// Change all three LEDs' color values</span>
   
   <span class="comment">// Test current colors match target color</span>
-  <span class="keyword">if</span> (currentColorsAreCloseToTargetColors()) {
+  <span class="keyword">if</span> (  ()) {
     makeNewTargetColors();
   }
 
@@ -264,7 +265,30 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>From my own experience, when a process can be easily decomposed into smaller steps, I prefer Top-down design(decomposition). With Top-down design, I think, one advantage is that you won’t be overwhelmed by the details since every time you are only going one level deeper. Every time I only need to think about one level of the whole problem. And I know all the upper levels are already solved and all the lower levels will be solved but, hey, they are NOT my problems NOW. :D</p>
 <p>If you don’t know what Top down design or decomposition means, I recommend watching Lecture 3 of <strong>Programming Methodology</strong> by Stanford University to get a basic understanding of Top down design and decomposition. Video Link: <a href="http://youtu.be/C5HeRliZ0Ns?t=13m" target="_blank">http://youtu.be/C5HeRliZ0Ns?t=13m</a> Hope you enjoy. Whether you like it or not, if you want to share anything just leave me a comment. :D</p>
 <p>For more information, Google <strong>Top down design</strong>.</p>
-<h4 id="V3-2-1">V3.2.1</h4>
+<h4 id="V3-2-2_Quick_Fix">V3.2.2 Quick Fix</h4>
+<p>I don’t like code that won’t compile. It means that I can not test it or verify if it is correct or not.</p>
+<p>Quick fix:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">void</span> updateAllColorsOnLED() { }
+
+<span class="keyword">bool</span> currentColorsAreCloseToTargetColors() { }
+
+<span class="keyword">void</span> makeNewTargetColors() { }
+
+<span class="keyword">void</span> delayForAShortTime() { }
+</pre></td></tr></table></figure>
+
+
+<p>Voila, it compiles! :D</p>
+<p>You can put it anywhere you like, as long as it is in the same file. Personally I would prefer to put it under the <code>loop</code> function. </p>
+<h4 id="V3-3_Simple_Functions_for_loop">V3.3 Simple Functions for <code>loop</code></h4>
+<p>Let’s start with easy ones.</p>
 <h4 id="V3-3-1_Implementing_currentColorsAreCloseToTargetColors">V3.3.1 Implementing <code>currentColorsAreCloseToTargetColors</code></h4>
 <p>If anyone of the currentValues aren’t close to the corresponding one in targetValues, then return <code>false</code> which is “not true” in programming language(in this case, we are actually using C++).</p>
 <p>P.S. The code in this article is almost using C, except for <code>bool</code> which is a C++ built-in type.</p>
@@ -287,9 +311,9 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>What if every time when we change the value, the change is not 1?</p>
-<h4 id="V3-3-2_Implementing_colorsAreNotClose">V3.3.2 Implementing <code>colorsAreNotClose</code></h4>
-<p>Easy one. No further explanation. :D</p>
+<p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>Think about this: what if every time when we change the value, the change is not 1?</p>
+<h4 id="V3-3-2_Implementing_colorsAreNotClose,_makeNewTargetColors_and_delayForAShortTime">V3.3.2 Implementing <code>colorsAreNotClose</code>, <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
+<p>Simple and self-explanatory code. No further explanation. :D</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -299,6 +323,17 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 7
 8
 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
 </pre></td><td class="code"><pre><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kMultiple = <span class="number">2</span>;
 <span class="keyword">bool</span> colorsAreNotClose(<span class="keyword">int</span> currentValue, <span class="keyword">int</span> targetValue) {
   <span class="keyword">if</span> (currentValue &lt; targetValue - kMultiple * kChangeStep) {
@@ -308,9 +343,21 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
   }
   <span class="keyword">return</span> <span class="keyword">true</span>;
 }
+
+<span class="keyword">void</span> makeNewTargetColors() {
+  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    targetValues[index] = randomColor();
+  }
+}
+
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kDelayTime = <span class="number">30</span>; <span class="comment">// ms</span>
+<span class="keyword">void</span> delayForAShortTime() {
+  delay(kDelayTime);
+}
 </pre></td></tr></table></figure>
 
 
+<p>Because of the complexity of function <code>updateAllColorsOnLED</code>, I put it in another subversion.</p>
 <h4 id="V3-4-1_Implementing_updateAllColorsOnLED">V3.4.1 Implementing <code>updateAllColorsOnLED</code></h4>
 <p>The function name is pretty self-explanatory.</p>
 <p>Have a look at <a href="#output-to-one-pin-at-a-time">Output to one pin at a time</a> to find out why we are updating all three colors at the same time.</p>
@@ -334,7 +381,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 }
 
 <span class="keyword">void</span> updateLedAtIndex(<span class="keyword">int</span> index) {
-  <span class="keyword">if</span> (needIncreaseValueAtIndex(index)) {
+  <span class="keyword">if</span> (needsIncreaseValueAtIndex(index)) {
     increaseLedCurrentValueAtIndex(index);
   } <span class="keyword">else</span> {
     decreaseLedCurrentValueAtIndex(index);
@@ -368,7 +415,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 15
 16
 17
-</pre></td><td class="code"><pre><span class="keyword">bool</span> needIncreaseValueAtIndex(<span class="keyword">int</span> index) {
+</pre></td><td class="code"><pre><span class="keyword">bool</span> needsIncreaseValueAtIndex(<span class="keyword">int</span> index) {
   <span class="keyword">return</span> currentValues[index] &lt; targetValues[index]
 }
 
@@ -402,31 +449,6 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
   } <span class="keyword">else</span> <span class="keyword">if</span> (currentValues[index] &gt; kColorValueMax) {
     currentValues[index] = kColorValueMax;    
   }
-}
-</pre></td></tr></table></figure>
-
-
-<h4 id="V3-5_Last_Piece_of_The_Puzzle_-_Implementing_makeNewTargetColors_and_delayForAShortTime">V3.5 Last Piece of The Puzzle - Implementing <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
-<p>Too easy. :D</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-</pre></td><td class="code"><pre><span class="keyword">void</span> makeNewTargetColors() {
-  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
-    targetValues[index] = randomColor();
-  }
-}
-
-<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kDelayTime = <span class="number">30</span>; <span class="comment">// ms</span>
-<span class="keyword">void</span> delayForAShortTime() {
-  delay(kDelayTime);
 }
 </pre></td></tr></table></figure>
 
