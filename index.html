@@ -138,9 +138,9 @@
 <span class="comment">// Change this according to your own hardware setting.</span>
 
 <span class="keyword">void</span> setup() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(ledPins[thisLed], OUTPUT);
-    analogWrite(ledPins[thisLed], randomColor());
+  <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    pinMode(ledPins[index], OUTPUT);
+    analogWrite(ledPins[index], randomColor());
   }
 }
 

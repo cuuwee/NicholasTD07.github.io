@@ -137,9 +137,9 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <span class="comment">// Change this according to your own hardware setting.</span>
 
 <span class="keyword">void</span> setup() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(ledPins[thisLed], OUTPUT);
-    analogWrite(ledPins[thisLed], randomColor());
+  <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    pinMode(ledPins[index], OUTPUT);
+    analogWrite(ledPins[index], randomColor());
   }
 }
 
@@ -168,8 +168,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 5
 6
 </pre></td><td class="code"><pre><span class="keyword">void</span> loop() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    analogWrite(ledPins[thisLed], randomColor());
+  <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    analogWrite(ledPins[index], randomColor());
   }
   delay(<span class="number">500</span>); <span class="comment">// 500 milliseconds = 0.5 seconds</span>
 }
@@ -177,8 +177,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 
 
 <p>As you can see that we almost copied the code in <code>setup</code>. But we call function <code>delay</code> after setting RGB LED to a different color. The <code>delay</code> function “tells the Arduino to stop doing anything until a certain period of time is up.”(copied from <a href="http://cdn.shopify.com/s/files/1/0045/8932/files/ExpKitGettingStartedGuide1.4.pdf?1121" target="_blank">Arduino Experimenters Kit Project Guide</a>) That’s why there’s a 0.5 second pause from one change of color to another.</p>
-<h3 id="V2-5_Refactoring">V2.5 Refactoring</h3>
-<p>This line saying <code>analogWrite(ledPins[thisLed], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
+<h3 id="V2-1_Refactoring">V2.1 Refactoring</h3>
+<p>This line saying <code>analogWrite(ledPins[index], randomColor());</code> is repeated twice. It’s duplicated code! I don’t like that.<br>Let’s do a little bit refactoring here by adding following function <code>setLed</code>.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -188,7 +188,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<p>And changes <code>analogWrite(ledPins[thisLed], randomColor());</code> to <code>setLed(ledPins[thisLed], randomColor());</code>.</p>
+<p>And changes <code>analogWrite(ledPins[index], randomColor());</code> to <code>setLed(ledPins[index], randomColor());</code>.</p>
 <p>You might wonder: “It’s still duplicated code. How’s this better?”</p>
 <p><!-- TODO --><br>First of all, it gives the duplicated code a name. Without a proper name, meaning of a block of a code maybe not that obvious as it is to you to others reading your code.<br>Second of all, it cut down our code which depends on other code. This can be handy. Let’s say function <code>analogWrite</code> was renamed to <code>writeToAnalog</code>, then with this refactored code, you only need to make this change once.</p>
 <p>(If you come up with something else why this refactoring is good, please feel free to leave me a comment. :D)</p>
@@ -214,14 +214,14 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <span class="keyword">int</span> targetValues[<span class="number">3</span>];
 
 <span class="keyword">void</span> setup() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    pinMode(ledPins[thisLed], OUTPUT);
+  <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    pinMode(ledPins[index], OUTPUT);
 
     <span class="keyword">int</span> currentValue = randomColor();
-    setLed(ledPins[thisLed], currentValue);
+    setLed(ledPins[index], currentValue);
 
-    currentValues[thisLed] = currentValue;
-    targetValues[thisLed] = randomColor();
+    currentValues[index] = currentValue;
+    targetValues[index] = randomColor();
   }
 }
 </pre></td></tr></table></figure>
@@ -264,7 +264,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <p>From my own experience, when a process can be easily decomposed into smaller steps, I prefer Top-down design(decomposition). With Top-down design, I think, one advantage is that you won’t be overwhelmed by the details since every time you are only going one level deeper. Every time I only need to think about one level of the whole problem. And I know all the upper levels are already solved and all the lower levels will be solved but, hey, they are NOT my problems NOW. :D</p>
 <p>If you don’t know what Top down design or decomposition means, I recommend watching Lecture 3 of <strong>Programming Methodology</strong> by Stanford University to get a basic understanding of Top down design and decomposition. Video Link: <a href="http://youtu.be/C5HeRliZ0Ns?t=13m" target="_blank">http://youtu.be/C5HeRliZ0Ns?t=13m</a> Hope you enjoy. Whether you like it or not, if you want to share anything just leave me a comment. :D</p>
 <p>For more information, Google <strong>Top down design</strong>.</p>
-<h4 id="V3-3-1_-_Implementing_currentColorsAreCloseToTargetColors">V3.3.1 - Implementing <code>currentColorsAreCloseToTargetColors</code></h4>
+<h4 id="V3-2-1">V3.2.1</h4>
+<h4 id="V3-3-1_Implementing_currentColorsAreCloseToTargetColors">V3.3.1 Implementing <code>currentColorsAreCloseToTargetColors</code></h4>
 <p>If anyone of the currentValues aren’t close to the corresponding one in targetValues, then return <code>false</code> which is “not true” in programming language(in this case, we are actually using C++).</p>
 <p>P.S. The code in this article is almost using C, except for <code>bool</code> which is a C++ built-in type.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
@@ -276,8 +277,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 7
 8
 </pre></td><td class="code"><pre><span class="keyword">bool</span> currentColorsAreCloseToTargetColors() {
-  <span class="keyword">for</span> (<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    <span class="keyword">if</span> (colorsAreNotClose(currentValues[thisLed], targetValues[thisLed])) {
+  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    <span class="keyword">if</span> (colorsAreNotClose(currentValues[index], targetValues[index])) {
       <span class="keyword">return</span> <span class="keyword">false</span>;
     }
   }
@@ -286,8 +287,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<p>Why not <code>currentValues[thisLed] != targetValues[thisLed]</code>?<br>What if every time when we change the value, the change is not 1?</p>
-<h4 id="V3-3-2_-_Implementing_colorsAreNotClose">V3.3.2 - Implementing <code>colorsAreNotClose</code></h4>
+<p>Why not <code>currentValues[index] != targetValues[index]</code>?<br>What if every time when we change the value, the change is not 1?</p>
+<h4 id="V3-3-2_Implementing_colorsAreNotClose">V3.3.2 Implementing <code>colorsAreNotClose</code></h4>
 <p>Easy one. No further explanation. :D</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
@@ -310,7 +311,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<h4 id="V3-4-1_-_Implementing_updateAllColorsOnLED">V3.4.1 - Implementing <code>updateAllColorsOnLED</code></h4>
+<h4 id="V3-4-1_Implementing_updateAllColorsOnLED">V3.4.1 Implementing <code>updateAllColorsOnLED</code></h4>
 <p>The function name is pretty self-explanatory.</p>
 <p>Have a look at <a href="#output-to-one-pin-at-a-time">Output to one pin at a time</a> to find out why we are updating all three colors at the same time.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
@@ -327,8 +328,8 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 12
 13
 </pre></td><td class="code"><pre><span class="keyword">void</span> updateAllColorsOnLED() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> thisLed = <span class="number">0</span>; thisLed &lt; <span class="number">3</span>; thisLed++) {
-    updateLedAtIndex(thisLed);
+  <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    updateLedAtIndex(index);
   }
 }
 
@@ -349,7 +350,7 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 <li>When changing the value it needs validation because the value is given to the chip through <code>analogWrite(pin, value)</code>, where the value has a maximum value of 255, and a minimum value of 0.</li>
 </ol>
 <h4 id="V3-4-2_Functions_for_updateLedAtIndex">V3.4.2 Functions for <code>updateLedAtIndex</code></h4>
-<p>Because of the need to validate value after it is changed, we check the value after increasing and decreasing it. Then give this value to LED.</p>
+<p>For <code>increaseLedCurrentValueAtIndex</code> and <code>decreaseLedCurrentValueAtIndex</code>, because of the need to validate value after it is changed, we check the value after increasing and decreasing it. Then give this value to LED.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre>1
 2
 3
@@ -367,14 +368,6 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 15
 16
 17
-18
-19
-20
-21
-22
-23
-24
-25
 </pre></td><td class="code"><pre><span class="keyword">bool</span> needIncreaseValueAtIndex(<span class="keyword">int</span> index) {
   <span class="keyword">return</span> currentValues[index] &lt; targetValues[index]
 }
@@ -392,8 +385,18 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
   checkCurrentValueAtIndex(index);
   setLed(ledPins[index], currentValues[index]);
 }
+</pre></td></tr></table></figure>
 
-<span class="keyword">void</span> checkCurrentValueAtIndex(<span class="keyword">int</span> index) {
+
+<p>Validation is very simple. Just check whether the value goes below <code>kColorValueMin</code> or go over <code>kColorValueMax</code>. If so, we correct it.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="keyword">void</span> checkCurrentValueAtIndex(<span class="keyword">int</span> index) {
   <span class="keyword">if</span> (currentValues[index] &lt; kColorValueMin) {
     currentValues[index] = kColorValueMin;
   } <span class="keyword">else</span> <span class="keyword">if</span> (currentValues[index] &gt; kColorValueMax) {
@@ -403,7 +406,31 @@ When I went through all the parts inside Freetronics Experimenters Kit, and when
 </pre></td></tr></table></figure>
 
 
-<p><strong>To be continued.</strong></p>
+<h4 id="V3-5_Last_Piece_of_The_Puzzle_-_Implementing_makeNewTargetColors_and_delayForAShortTime">V3.5 Last Piece of The Puzzle - Implementing <code>makeNewTargetColors</code> and <code>delayForAShortTime</code></h4>
+<p>Too easy. :D</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="keyword">void</span> makeNewTargetColors() {
+  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">3</span>; index++) {
+    targetValues[index] = randomColor();
+  }
+}
+
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> kDelayTime = <span class="number">30</span>; <span class="comment">// ms</span>
+<span class="keyword">void</span> delayForAShortTime() {
+  delay(kDelayTime);
+}
+</pre></td></tr></table></figure>
+
+
 <h3 id="Possible_Pitfalls">Possible Pitfalls</h3>
 <p><a name="output-to-one-pin-at-a-time"></a></p>
 <h4 id="Output_to_one_pin_at_a_time">Output to one pin at a time</h4>
