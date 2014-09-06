@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://nickTD.com/"/>
-  <updated>2014-08-13T01:06:30.254Z</updated>
+  <updated>2014-09-06T23:17:55.553Z</updated>
   <id>http://nickTD.com/</id>
   
   <author>
@@ -13,6 +13,137 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Git Log for Any Date]]></title>
+    <link href="http://nickTD.com/2014/09/04/git-log-for-any-date/"/>
+    <id>http://nickTD.com/2014/09/04/git-log-for-any-date/</id>
+    <published>2014-09-04T00:54:02.000Z</published>
+    <updated>2014-09-06T23:13:37.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="The_Command">The Command</h2>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre><span class="label">git log --date=short  --abbrev-commit --pretty=format:</span>'<span class="var_expand">%Cred%</span>h<span class="var_expand">%Creset %</span>C(yellow)<span class="var_expand">%an%</span>Creset <span class="var_expand">%Cgreen%</span>cd<span class="var_expand">%Creset %</span>s<span class="var_expand">%Creset'</span>
+</pre></td></tr></table></figure>
+
+
+<p>It can be put in <code>alias</code> section inside <code>~/.gitconfig</code>. For me, it is <code>git ll</code>.</p>
+<p>Example output:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+2
+</pre></td><td class="code"><pre><span class="number">5</span>cccb7c NicholasTD07 <span class="number">2014</span>-<span class="number">09</span>-<span class="number">04</span> Refactor <span class="string">'Hello, World'</span>.
+<span class="number">115132</span>d NicholasTD07 <span class="number">2014</span>-<span class="number">09</span>-<span class="number">04</span> <span class="keyword">Add</span> <span class="string">'Hello, world!'</span>.
+</pre></td></tr></table></figure>
+
+
+<p>To get logs for a specific date, say ‘2014-09-04’, try this:</p>
+<p><code>git ll | grep 2014-09-04</code></p>
+<p>If time is needed in date, change <code>--date=short</code> to <code>--date=iso</code></p>
+<h2 id="What_Happened_Yesterday">What Happened Yesterday</h2>
+<p>Just add <code>--after=&#39;yesterday midnight&#39; --before=&#39;midnight&#39;</code> after <code>git log</code>, like this:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre>1
+</pre></td><td class="code"><pre>git <span class="keyword">log</span> --after=<span class="string">'yesterday midnight'</span> --before=<span class="string">'midnight'</span> --<span class="keyword">date</span>=<span class="string">'short'</span>  --abbrev-commit --<span class="keyword">format</span>=<span class="string">'%Cred%h%Creset %C(yellow)%an%Creset %Cgreen%cd%Creset %s%Creset'</span>
+</pre></td></tr></table></figure>
+
+
+]]></content>
+    
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Python 40 lines Socket HTTP Server]]></title>
+    <link href="http://nickTD.com/2014/08/23/python-40-lines-socket-http-server/"/>
+    <id>http://nickTD.com/2014/08/23/python-40-lines-socket-http-server/</id>
+    <published>2014-08-23T00:51:38.000Z</published>
+    <updated>2014-08-24T08:03:44.000Z</updated>
+    <content type="html"><![CDATA[<p>Dead simple socket HTTP server. Whatever the request is, it only responds a page which has “Hello, World!” as its title, and “Socket HTTP server in 40 lines!” as its body.</p>
+<p>That’s all.</p>
+<p>Here’s the code.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+</pre></td><td class="code"><pre><span class="comment">#!/usr/bin/env python</span>
+
+<span class="string">"""
+Inspired by "A simple Python webserver" by Stephen C Phillips.
+http://blog.scphillips.com/2012/12/a-simple-python-webserver/
+"""</span>
+
+<span class="keyword">import</span> socket
+
+<span class="comment"># Standard socket stuff:</span>
+host = <span class="string">''</span>
+port = <span class="number">8000</span>
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)
+sock.bind((host, port))
+sock.listen(<span class="number">1</span>)  <span class="comment"># don't queue up any requests</span>
+
+<span class="comment"># Loop forever, listening for requests:</span>
+<span class="keyword">while</span> <span class="keyword">True</span>:
+    conn, address_and_port = sock.accept()
+    ip_address, port = address_and_port
+    <span class="keyword">print</span> <span class="string">"Connection from: "</span> + ip_address + <span class="string">":"</span> + str(port)
+    request = conn.recv(<span class="number">1024</span>)  <span class="comment"># get the request, 1kB max</span>
+    <span class="keyword">print</span> request
+    conn.sendall(
+<span class="string">"""HTTP/1.0 200 OK
+Content-Type: text/html
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Hello, World!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+Socket HTTP server in 40 lines!
+&lt;/body&gt;
+&lt;/html&gt;
+"""</span>
+    )
+    conn.close()
+</pre></td></tr></table></figure>
+
+
+]]></content>
+    
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Use Freetronics Experimenters Kit to Build Continuously Changing Color RGB LED]]></title>
